@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  web:
+    container_name: backend
+    image: backend
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_URL=postgres://avnadmin:AVNS_d6P-Q41NXZvpZbLHl8F@pg-17f1a0f7-ajaiswal08324-9ed7.e.aivencloud.com:18795/defaultdb?sslmode=require
+
+  db:
+    container_name: db
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: avnadmin
+      POSTGRES_PASSWORD: AVNS_d6P-Q41NXZvpZbLHl8F
+      POSTGRES_DB: defaultdb
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
