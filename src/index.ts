@@ -9,6 +9,7 @@ import timeSheet from './routes/timesheet';
 import login from './auth/login';
 import signup from './auth/signup';
 import { authenticate } from './middleware/authMiddleware';
+import exp from 'constants';
 
 dotenv.config();
 
@@ -43,6 +44,8 @@ app.use('/projects', projectRoutes);
 app.use('/timesheets', timeSheet);
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Server is running on port ${port}`);
+// });
+
+export default app;

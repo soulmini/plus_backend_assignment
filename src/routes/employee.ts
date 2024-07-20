@@ -2,11 +2,15 @@ import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const router = express.Router();
-import { authenticate } from './../middleware/authMiddleware';
 
 // Create an employee
 router.post('/create', async (req: Request, res: Response) => {
   const { firstName, lastName, email, phoneNumber, departmentId, dateOfJoining, position, salary } = req.body;
+
+  // Validate input data
+  if (!firstName || !lastName || !email || !phoneNumber || isNaN(Number(departmentId)) || !dateOfJoining || !position || isNaN(Number(salary))) {
+    return res.status(400).json({ error: 'Invalid input data' });
+  }
 
   try {
     const newEmployee = await prisma.employee.create({
@@ -18,20 +22,20 @@ router.post('/create', async (req: Request, res: Response) => {
         dateOfJoining: new Date(dateOfJoining),
         position,
         salary: parseFloat(salary),
-        departmentId
+        departmentId: parseInt(departmentId, 10)
       }
     });
     res.status(201).json(newEmployee);
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: 'Error creating employee' });
   }
 });
 
 // Get all employees with pagination, filtering, and sorting
 router.get('/getAllData', async (req: Request, res: Response) => {
   const {
-    page = 1,
-    pageSize = 10,
+    page = '1',
+    pageSize = '10',
     sortBy = 'id',
     sortOrder = 'asc',
     position,
@@ -39,8 +43,15 @@ router.get('/getAllData', async (req: Request, res: Response) => {
     dateOfJoining
   } = req.query;
 
-  const skip = (Number(page) - 1) * Number(pageSize);
-  const take = Number(pageSize);
+  const pageNumber = parseInt(page as string, 10);
+  const pageSizeNumber = parseInt(pageSize as string, 10);
+  // @ts-ignore
+  if (isNaN(pageNumber) || isNaN(pageSizeNumber) || !['asc', 'desc'].includes(sortOrder)) {
+    return res.status(400).json({ error: 'Invalid query parameters' });
+  }
+
+  const skip = (pageNumber - 1) * pageSizeNumber;
+  const take = pageSizeNumber;
 
   const filters: any = {};
 
@@ -64,12 +75,12 @@ router.get('/getAllData', async (req: Request, res: Response) => {
       data: employees,
       pagination: {
         total: totalEmployees,
-        page: Number(page),
-        pageSize: Number(pageSize)
+        page: pageNumber,
+        pageSize: pageSizeNumber
       }
     });
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: 'Error fetching employees' });
   }
 });
 
@@ -77,9 +88,13 @@ router.get('/getAllData', async (req: Request, res: Response) => {
 router.get('/getData/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
+  if (isNaN(Number(id))) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+
   try {
     const employee = await prisma.employee.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id, 10) }
     });
 
     if (!employee) {
@@ -97,9 +112,13 @@ router.put('/update/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { firstName, lastName, email, phoneNumber, departmentId, dateOfJoining, position, salary } = req.body;
 
+  if (isNaN(Number(id)) || !firstName || !lastName || !email || !phoneNumber || isNaN(Number(departmentId)) || !dateOfJoining || !position || isNaN(Number(salary))) {
+    return res.status(400).json({ error: 'Invalid input data' });
+  }
+
   try {
     const updatedEmployee = await prisma.employee.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(id, 10) },
       data: {
         firstName,
         lastName,
@@ -108,12 +127,16 @@ router.put('/update/:id', async (req: Request, res: Response) => {
         dateOfJoining: new Date(dateOfJoining),
         position,
         salary: parseFloat(salary),
-        departmentId
+        departmentId: parseInt(departmentId, 10)
       }
     });
 
     res.status(200).json(updatedEmployee);
   } catch (error) {
+    // @ts-ignore
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
     res.status(500).json({ error: 'Error updating employee' });
   }
 });
@@ -122,13 +145,21 @@ router.put('/update/:id', async (req: Request, res: Response) => {
 router.delete('/delete/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
+  if (isNaN(Number(id))) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+
   try {
     await prisma.employee.delete({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id, 10) }
     });
 
     res.status(204).send();
   } catch (error) {
+    // @ts-ignore
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
     res.status(500).json({ error: 'Error deleting employee' });
   }
 });
