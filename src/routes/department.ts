@@ -1,51 +1,29 @@
 import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { authenticate } from './../middleware/authMiddleware';
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// Create a project
+// Create a department
 router.post('/create', async (req: Request, res: Response) => {
-  const { name, description, startDate, endDate, departmentId, employeeIds } = req.body;
+  const { name, description, location } = req.body;
 
   try {
-    // Check if all employee IDs exist
-    const employees = await prisma.employee.findMany({
-      where: {
-        id: {
-          in: employeeIds,
-        },
-      },
-    });
-
-    if (employees.length !== employeeIds.length) {
-      return res.status(400).json({ error: 'One or more employee IDs do not exist' });
-    }
-
-    const newProject = await prisma.project.create({
+    const newDepartment = await prisma.department.create({
       data: {
         name,
         description,
-        startDate: new Date(startDate),
-        endDate: endDate ? new Date(endDate) : null,
-        department: {
-          connect: { id: departmentId },
-        },
-        employeeProjects: {
-          create: employeeIds.map((id: number) => ({ employeeId: id })),
-        },
+        location,
       },
     });
-
-    res.status(201).json(newProject);
+    res.status(201).json(newDepartment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error creating project' });
+    res.status(500).json({ error: 'Error creating department' });
   }
 });
 
-// Get all projects with pagination, sorting, and filtering
+// Get all departments with pagination, filtering, and sorting
 router.get('/getAll', async (req: Request, res: Response) => {
   const {
     page = '1',
@@ -53,7 +31,7 @@ router.get('/getAll', async (req: Request, res: Response) => {
     sortBy = 'id',
     sortOrder = 'asc',
     name,
-    departmentId,
+    location,
   } = req.query;
 
   const skip = (parseInt(page as string) - 1) * parseInt(pageSize as string);
@@ -62,105 +40,89 @@ router.get('/getAll', async (req: Request, res: Response) => {
   const filters: any = {};
 
   if (name) filters.name = { contains: name as string };
-  if (departmentId) filters.departmentId = Number(departmentId);
+  if (location) filters.location = { contains: location as string };
 
   try {
-    const projects = await prisma.project.findMany({
+    const departments = await prisma.department.findMany({
       skip,
       take,
       where: filters,
       orderBy: {
         [sortBy as string]: sortOrder as 'asc' | 'desc',
       },
-      include: { 
-        department: true, 
-        employeeProjects: { include: { employee: true } } 
-      },
     });
 
-    const totalProjects = await prisma.project.count({ where: filters });
+    const totalDepartments = await prisma.department.count({ where: filters });
 
     res.status(200).json({
-      data: projects,
+      data: departments,
       pagination: {
-        total: totalProjects,
+        total: totalDepartments,
         page: parseInt(page as string),
         pageSize: parseInt(pageSize as string),
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching projects' });
+    // console.error(error);
+    res.status(500).json({ error: 'Error fetching departments' });
   }
 });
 
-// Get a single project by ID
+// Get a single department by ID
 router.get('/get/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const project = await prisma.project.findUnique({
+    const department = await prisma.department.findUnique({
       where: { id: parseInt(id) },
-      include: { 
-        department: true, 
-        employeeProjects: { include: { employee: true } } 
-      },
     });
 
-    if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
+    if (!department) {
+      return res.status(404).json({ error: 'Department not found' });
     }
 
-    res.status(200).json(project);
+    res.status(200).json(department);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching project' });
+    // console.error(error);
+    res.status(500).json({ error: 'Error fetching department' });
   }
 });
 
-// Update a project by ID
+// Update a department by ID
 router.put('/update/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, description, startDate, endDate, departmentId, employeeIds } = req.body;
+  const { name, description, location } = req.body;
 
   try {
-    const updatedProject = await prisma.project.update({
+    const updatedDepartment = await prisma.department.update({
       where: { id: parseInt(id) },
       data: {
         name,
         description,
-        startDate: new Date(startDate),
-        endDate: endDate ? new Date(endDate) : null,
-        department: {
-          connect: { id: departmentId },
-        },
-        employeeProjects: {
-          deleteMany: {}, // Remove all current associations
-          create: employeeIds.map((id: number) => ({ employeeId: id })), // Create new associations
-        },
-      },
-      include: { 
-        department: true, 
-        employeeProjects: { include: { employee: true } } 
+        location,
       },
     });
 
-    res.status(200).json(updatedProject);
+    res.status(200).json(updatedDepartment);
   } catch (error) {
-    res.status(500).json({ error: 'Error updating project' });
+    // console.error(error);
+    res.status(500).json({ error: 'Error updating department' });
   }
 });
 
-// Delete a project by ID
+// Delete a department by ID
 router.delete('/delete/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    await prisma.project.delete({
+    await prisma.department.delete({
       where: { id: parseInt(id) },
     });
 
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting project' });
+    //console.error(error);
+    res.status(500).json({ error: 'Error deleting department' });
   }
 });
 

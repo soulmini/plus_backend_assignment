@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "rootDir": "./tests", // Change rootDir to the tests directory
+      "outDir": "./dist-tests" // Change outDir for test output
+    },
+    "include": [
+      "tests/**/*" // Include test files
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }
+  

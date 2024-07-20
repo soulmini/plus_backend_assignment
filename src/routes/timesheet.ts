@@ -9,6 +9,14 @@ router.post('/create', async (req: Request, res: Response) => {
   const { employeeId, projectId, date, hoursWorked, description } = req.body;
 
   try {
+    // Check if employee and project exist
+    const employeeExists = await prisma.employee.findUnique({ where: { id: employeeId } });
+    const projectExists = await prisma.project.findUnique({ where: { id: projectId } });
+
+    if (!employeeExists || !projectExists) {
+      return res.status(400).json({ error: 'Employee or Project does not exist' });
+    }
+
     const newTimesheet = await prisma.timesheet.create({
       data: {
         employee: { connect: { id: employeeId } },
@@ -96,7 +104,7 @@ router.get('/get/:id', async (req: Request, res: Response) => {
 
     res.status(200).json(timesheet);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: 'Error fetching timesheet' });
   }
 });
@@ -107,6 +115,14 @@ router.put('/update/:id', async (req: Request, res: Response) => {
   const { employeeId, projectId, date, hoursWorked, description } = req.body;
 
   try {
+    // Check if employee and project exist
+    const employeeExists = await prisma.employee.findUnique({ where: { id: employeeId } });
+    const projectExists = await prisma.project.findUnique({ where: { id: projectId } });
+
+    if (!employeeExists || !projectExists) {
+      return res.status(400).json({ error: 'Employee or Project does not exist' });
+    }
+
     const updatedTimesheet = await prisma.timesheet.update({
       where: { id: parseInt(id) },
       data: {
@@ -136,7 +152,7 @@ router.delete('/delete/:id', async (req: Request, res: Response) => {
 
     res.status(204).send();
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: 'Error deleting timesheet' });
   }
 });
