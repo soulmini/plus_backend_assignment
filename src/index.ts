@@ -33,7 +33,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // Test authorization
 app.get('/protected', authenticate, (req: Request, res: Response) => {
-    res.send(`Hello ${((req as any).user).email}, you have access to this protected route!`);
+    res.send(`Hello ${((req as any).user).email}, you have access to this protected route`);
 });
 
 // Authentication routes
