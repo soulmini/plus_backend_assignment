@@ -37,10 +37,10 @@ his API provides endpoints for managing projects, timesheets, and employees with
    PORT=3000
    ```
 
-5.Generate Prisma client:
-    ```bash
-     npx prisma generate
-    ```
+5. Generate Prisma client:
+   ```bash
+   npx prisma generate
+   ```
 
 6. Run the migrations the database:
    ```bash
