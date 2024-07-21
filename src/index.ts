@@ -43,9 +43,4 @@ app.use('/departments', departmentRoutes);
 app.use('/projects', projectRoutes);
 app.use('/timesheets', timeSheet);
 
-// Start the server
-// app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
-
 export default app;
