@@ -150,3 +150,4 @@ tests/
     └── timesheet.test.ts
 ```
 
+## Developed by Ayush Jaiswal ❤️
