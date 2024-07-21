@@ -4,6 +4,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const router = express.Router();
 
+
+
+
 // Create a department
 router.post('/create', async (req: Request, res: Response) => {
   const { name, description, location } = req.body;
