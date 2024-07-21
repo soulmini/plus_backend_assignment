@@ -1,72 +1,39 @@
-  Department
-  +-----------------------------------+
-  | id                                |
-  | name                              |
-  | description                       |
-  | location                          |
-  +-----------------------------------+
-             |
-             | One-to-Many
-             |
-  +------------------+
-  |                  |
-  |                  |
-  |                  |
-  V                  V
-Employee         Project
-+---------------------------+     +---------------------------+
-| id                        |     | id                        |
-| firstName                 |     | name                      |
-| lastName                  |     | description               |
-| email                     |     | startDate                 |
-| phoneNumber               |     | endDate                   |
-| dateOfJoining             |     | departmentId              |
-| position                  |     |                           |
-| salary                    |     +---------------------------+
-| departmentId              |
-+---------------------------+
-             |
-             | One-to-Many
-             |
-             V
-Timesheet
-+---------------------------+
-| id                        |
-| employeeId                |
-| projectId                 |
-| date                      |
-| hoursWorked               |
-| description               |
-+---------------------------+
-
-        Many-to-Many
-       +-------------+
-       |             |
-       V             V
-  EmployeeProjects
-  +-------------------------+
-  | employeeId              |
-  | projectId               |
-  +-------------------------+
-
-
-Explanation
-
-    Department:
-        A Department can have multiple Employees and Projects.
-
-    Employee:
-        An Employee belongs to one Department (via departmentId).
-        An Employee can have multiple Timesheets.
-        An Employee can be associated with multiple Projects through the EmployeeProjects join table.
-
-    Project:
-        A Project belongs to one Department (via departmentId).
-        A Project can have multiple Timesheets.
-        A Project can have multiple Employees through the EmployeeProjects join table.
-
-    Timesheet:
-        A Timesheet is associated with one Employee and one Project.
-
-    EmployeeProjects:
-        This join table handles the many-to-many relationship between Employee and Project.
++----------------+         +----------------+         +----------------+
+|    Department   |<------>|     Employee    |<------>|    Timesheet    |
++----------------+         +----------------+         +----------------+
+| id (PK)        |         | id (PK)       |         | id (PK)       |
+| name           |         | firstName     |         | employeeId (FK) |
+| description    |         | lastName      |         | projectId (FK)  |
+| location       |         | email         |         | date          |
++----------------+         | phoneNumber    |         | hoursWorked   |
+                          | dateOfJoining |         | description   |
+                          | position      |         +----------------+
+                          | salary        |
+                          | departmentId (FK) |
+                          +----------------+
+                                  |
+                                  |
+                                  |
+                                  |
+                                  v
+                          +----------------+
+                          |    Project     |
+                          +----------------+
+                          | id (PK)       |
+                          | name          |
+                          | description    |
+                          | startDate     |
+                          | endDate       |
+                          | departmentId (FK) |
+                          +----------------+
+                                  |
+                                  |
+                                  |
+                                  |
+                                  v
+                          +----------------+
+                          | EmployeeProjects|
+                          +----------------+
+                          | employeeId (FK) |
+                          | projectId (FK)  |
+                          +----------------+
