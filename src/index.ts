@@ -9,13 +9,16 @@ import timeSheet from './routes/timesheet';
 import login from './auth/login';
 import signup from './auth/signup';
 import { authenticate } from './middleware/authMiddleware';
-import exp from 'constants';
+import setupSwagger from './swagger';
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 
 const app = express();
+
+
+setupSwagger(app);
 
 // Define the port to listen on
 const port = process.env.PORT || 3000;
