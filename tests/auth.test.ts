@@ -15,7 +15,7 @@ describe('POST /auth/signup', () => {
     test('should create a new user and return a token', async () => {
       const response = await request(app)
         .post('/auth/signup')
-        .send({ email: 'testw342@example.com', password: 'password' });
+        .send({ email: 'testw352@example.com', password: 'password' });
         
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('message', 'User created');
