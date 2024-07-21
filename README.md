@@ -122,25 +122,28 @@ npm test
 
 ## Folder Structure
 
-## Folder Structure
-
 ```
 src/
 ├── auth/
 │   ├── login.ts
 │   └── signup.ts
 ├── middleware/
-│   └── auth.ts
+│   └── authMiddleware.ts
 ├── routes/
 │   ├── department.ts
 │   ├── employee.ts
 │   ├── project.ts
 │   └── timesheet.ts
-├── swagger/
-│   ├── department.swagger.ts
-│   ├── employee.swagger.ts
-│   ├── project.swagger.ts
-│   └── timesheet.swagger.ts
+├── swaggers/
+│   ├── authSwagger/
+│   │   ├── login.swagger.ts
+│   │   └── signup.swagger.ts
+│   ├── routesSwagger/
+│   │   ├── department.swagger.ts
+│   │   ├── employee.swagger.ts
+│   │   ├── project.swagger.ts
+│   │   └── timesheet.swagger.ts
+│   └── index.swagger.ts
 ├── index.ts
 ├── server.ts
 └── swagger.ts
