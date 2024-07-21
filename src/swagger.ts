@@ -27,7 +27,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/swaggers/*.ts', './src/swaggers/authSwagger/*.ts', './src/swaggers/routesSwagger/*.ts'], // Path to your API files
+  apis: ['./src/swaggers/*.ts', './src/swaggers/authSwagger/*.ts', './src/swaggers/routesSwagger/*.ts'],
 };
 
 const specs = swaggerJsdoc(options);
