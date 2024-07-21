@@ -116,6 +116,9 @@ npm test
 ## Folder Structure
 
 ```
+prisma/
+└── schema.prisma
+
 src/
 ├── auth/
 │   ├── login.ts
