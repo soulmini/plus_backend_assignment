@@ -48,7 +48,8 @@ his API provides endpoints for managing projects, timesheets, and employees with
    ```
 7. Start the development server:
    ```bash
-   npm run dev
+   npm run build
+   npm start
    ```
 
 ### Docker Setup
