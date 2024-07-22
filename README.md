@@ -26,15 +26,15 @@ his API provides endpoints for managing projects, timesheets, and employees with
    ```
 4. Set up the PostgreSQL database and configure the connection details in your environment variables.
    ```bash
-   DB_USER=avnadmin
-   DB_PASSWORD=AVNS_d6P-Q41NXZvpZbLHl8F
-   DB_HOST=pg-17f1a0f7-ajaiswal08324-9ed7.e.aivencloud.com
-   DB_PORT=18795
-   DB_NAME=defaultdb
-   DB_SSLMODE=require
-   DATABASE_URL=Your DB URI
-   SECRET_KEY=AVNS_d6P8
-   PORT=3000
+   DB_USER="Your database user"
+   DB_PASSWORD="Your database password""
+   DB_HOST="Your database host"
+   DB_PORT="Your database port"
+   DB_NAME="Your database name"
+   DB_SSLMODE="Your database SSL mode"
+   DATABASE_URL="Your DB URI"
+   SECRET_KEY="Your secret key"
+   PORT="Your database port"
    ```
 
 5. Generate Prisma client:
