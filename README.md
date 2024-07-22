@@ -46,7 +46,7 @@ his API provides endpoints for managing projects, timesheets, and employees with
    ```bash
    npx prisma migrate dev
    ```
-7. Start the development server:
+7. Build & Start the development server:
    ```bash
    npm run build
    npm start
